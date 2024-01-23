@@ -1,0 +1,12 @@
+{
+    "name": "lazy-pipe",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "index.ts",
+    "scripts": {},
+    "devDependencies": {
+        "bun-types": "1.0.20",
+        "tsup": "^8.0.1",
+        "typescript": "5.3.3"
+    }
+}
