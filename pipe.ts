@@ -49,7 +49,7 @@ export const Pipe = (<const T>(_value: T) => {
     };
     const catchable = {
         catch: (fn: (err: unknown) => any) => {
-            const item = fns.peekLast();
+            const item = fns.peekBack();
             if (!item) return ret;
             item.catchFn = fn as any;
             return ret;
