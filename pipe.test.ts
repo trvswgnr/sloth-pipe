@@ -187,4 +187,69 @@ describe("Pipe", () => {
             expect(val).toBe(9);
         });
     });
+
+    it("should be reusable", () => {
+        const pipe = Pipe(5)
+            .to((x) => x * 2)
+            .to((x) => x + 3);
+        expect(pipe.exec()).toBe(13);
+        expect(pipe.exec()).toBe(13);
+        expect(pipe.exec()).toBe(13);
+        pipe.to((x) => x - 1);
+        expect(pipe.exec()).toBe(12);
+        expect(pipe.exec()).toBe(12);
+        const fn1 = mock((x) => x);
+        const fn2 = mock((x) => x);
+        const fn3 = mock((x) => x);
+        pipe.to(fn1).to(fn2).to(fn3);
+        expect(fn1).not.toHaveBeenCalled();
+        expect(fn2).not.toHaveBeenCalled();
+        expect(fn3).not.toHaveBeenCalled();
+        expect(pipe.exec()).toBe(12);
+        expect(pipe.exec()).toBe(12);
+        expect(pipe.exec()).toBe(12);
+        expect(fn1).toHaveBeenCalledTimes(1);
+        expect(fn2).toHaveBeenCalledTimes(1);
+        expect(fn3).toHaveBeenCalledTimes(1);
+        expect(pipe.exec()).toBe(12);
+        expect(fn1).toHaveBeenCalledWith(12);
+        expect(fn2).toHaveBeenCalledWith(12);
+        expect(fn3).toHaveBeenCalledWith(12);
+    });
+
+    it("should be practical", () => {
+        const pipe1 = Pipe("hello")
+            .to((x) => x.toUpperCase())
+            .to((x) => x.split(""))
+            .to((x) => x.reverse())
+            .to((x) => x.join(""))
+            .to((x) => x + "!")
+            .to((x) => x.repeat(3))
+            .to((x) => x.split("!"))
+            .to((x) => x.join(" "))
+            .to((x) => x.trim())
+            .exec();
+        expect(pipe1).toBe("OLLEH OLLEH OLLEH");
+
+        const fn1 = mock((x) => x);
+        const fn2 = mock((x) => x);
+        const fn3 = mock((x) => x);
+        const pipe2 = Pipe(69)
+            .to(String)
+            .to((x) => x.split(""))
+            .tap(fn1)
+            .to((x) => x.map((y) => +y))
+            .to((x) => x.reduce((a, b) => a + b))
+            .tap(fn2)
+            .to((x) => x ** 2)
+            .tap(fn3)
+            .to((x) => x.toString(16))
+            .to((x) => x.toUpperCase())
+            .to((x) => x.padStart(4, "0"))
+            .exec();
+        expect(fn1).toHaveBeenCalledWith(["6", "9"]);
+        expect(fn2).toHaveBeenCalledWith(15);
+        expect(fn3).toHaveBeenCalledWith(225);
+        expect(pipe2).toBe("00E1");
+    });
 });
