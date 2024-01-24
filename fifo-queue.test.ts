@@ -38,6 +38,59 @@ describe("FIFO Queue", () => {
         expect(queue.dequeue()).toBeUndefined();
     });
 
+    test("should peek the front item in the queue", () => {
+        const queue1 = new Queue<number>();
+        queue1.enqueue(1);
+        queue1.enqueue(2);
+
+        expect(queue1.peekFront()).toBe(1);
+        expect(queue1.size()).toBe(2);
+
+        const queue2 = new Queue<number>();
+        queue2.enqueue(1);
+        expect(queue2.peekFront()).toBe(1);
+
+        const queue3 = new Queue<number>();
+        expect(queue3.peekFront()).toBeUndefined();
+    });
+
+    test("should peek the back item in the queue", () => {
+        const queue = new Queue<number>();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        expect(queue.peekBack()).toBe(3);
+        expect(queue.size()).toBe(3);
+
+        const queue2 = new Queue<number>();
+        queue2.enqueue(1);
+        expect(queue2.peekBack()).toBe(1);
+
+        const queue3 = new Queue<number>();
+        expect(queue3.peekBack()).toBeUndefined();
+    });
+
+    test("should peek front and back of the queue", () => {
+        const queue = new Queue<number>();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        expect(queue.peekFront()).toBe(1);
+        expect(queue.peekBack()).toBe(3);
+        expect(queue.size()).toBe(3);
+
+        const queue2 = new Queue<number>();
+        queue2.enqueue(1);
+        expect(queue2.peekFront()).toBe(1);
+        expect(queue2.peekBack()).toBe(1);
+
+        const queue3 = new Queue<number>();
+        expect(queue3.peekFront()).toBeUndefined();
+        expect(queue3.peekBack()).toBeUndefined();
+    });
+
     test("should handle large data sets", () => {
         const num = 100_000;
         for (let i = 0; i < num; i++) {
