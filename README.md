@@ -1,6 +1,8 @@
-# Lazy Pipe
+![sloth-pipe](banner.png)
 
-Lazy Pipe is a library for TypeScript and JavaScript designed to facilitate the creation of lazy,
+# Sloth Pipe
+
+Sloth Pipe is a library for TypeScript and JavaScript designed to facilitate the creation of lazy,
 chainable, and reusable pipes for data transformation and processing. Borrowing from functional
 programming paradigms, it offers a convenient and powerful way to compose functions and manage data
 flow in an application, with an emphasis on lazy evaluation and efficient execution.
@@ -22,24 +24,24 @@ flow in an application, with an emphasis on lazy evaluation and efficient execut
 
 ## Installation
 
-To install Lazy Pipe, use the following command:
+To install Sloth Pipe, use the following command:
 
 ```bash
-bun i lazy-pipe
+bun i sloth-pipe
 ```
 
 or
 
 ```bash
-npm install lazy-pipe
+npm install sloth-pipe
 ```
 
 ## Usage
 
-Here's a simple example of how to use Lazy Pipe:
+Here's a simple example of how to use Sloth Pipe:
 
 ```typescript
-import { Pipe } from "lazy-pipe";
+import { Pipe } from "sloth-pipe";
 
 const result = Pipe(5)
     .to((x) => x * 2)
@@ -51,7 +53,7 @@ console.log(result); // Outputs: 13
 
 ### Async Operations
 
-Lazy Pipe seamlessly integrates with asynchronous operations:
+Sloth Pipe seamlessly integrates with asynchronous operations:
 
 ```typescript
 const asyncResult = await Pipe(5)

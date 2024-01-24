@@ -1,6 +1,6 @@
-# Lazy Pipe API Documentation
+# Sloth Pipe API Documentation
 
-Lazy Pipe is a TS/JS library for building lazy, chainable, and efficient data processing pipes. This
+Sloth Pipe is a TS/JS library for building lazy, chainable, and efficient data processing pipes. This
 document provides detailed information about the API, including method signatures, return types, and
 usage examples.
 
@@ -110,7 +110,7 @@ pipe.catch((error) => console.error(error));
 
 ### Pipeable\<T>
 
-The `Pipeable<T>` type is the core of Lazy Pipe's chainable interface. It allows the chaining of
+The `Pipeable<T>` type is the core of Sloth Pipe's chainable interface. It allows the chaining of
 `to`, `tap`, `catch`, and `exec` methods.
 
 ### Function Signatures
@@ -144,7 +144,7 @@ The `Pipeable<T>` type is the core of Lazy Pipe's chainable interface. It allows
 
 ## Error Handling
 
-Lazy Pipe allows handling errors that may occur during function execution in the pipeline. When an
+Sloth Pipe allows handling errors that may occur during function execution in the pipeline. When an
 error is thrown in a `to` or `tap` method, the `catch` method is invoked if it is defined. This does
 not stop the pipeline from executing, but it does allow for graceful error handling.
 
@@ -163,7 +163,7 @@ console.log(result); // Outputs: "Error occurred"
 
 ## Async/Await Support
 
-Lazy Pipe supports asynchronous operations within the pipeline. Functions passed to `to` or `tap`
+Sloth Pipe supports asynchronous operations within the pipeline. Functions passed to `to` or `tap`
 can be asynchronous, and `exec` will return a Promise if any function in the pipeline is
 asynchronous.
 

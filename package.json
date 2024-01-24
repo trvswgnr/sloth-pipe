@@ -1,6 +1,6 @@
 {
-    "name": "lazy-pipe",
-    "description": "A pipe that lazily evaluates only when needed, and only once.",
+    "name": "sloth-pipe",
+    "description": "A pipe utility that lazily evaluates only when needed, and only once.",
     "version": "0.0.1",
     "type": "module",
     "main": "dist/index.js",
