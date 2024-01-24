@@ -1,35 +1,42 @@
 export default class Queue<T> {
-    private inStack: T[];
-    private outStack: T[];
+    private in: T[];
+    private out: T[];
 
     constructor() {
-        this.inStack = [];
-        this.outStack = [];
+        this.in = [];
+        this.out = [];
     }
 
     enqueue(item: T): void {
-        this.inStack.push(item);
+        this.in.push(item);
     }
 
     dequeue(): T | undefined {
-        if (this.outStack.length === 0) {
-            while (this.inStack.length > 0) {
-                this.outStack.push(this.inStack.pop() as T);
+        if (this.out.length === 0) {
+            while (this.in.length > 0) {
+                this.out.push(this.in.pop() as T);
             }
         }
-        return this.outStack.pop();
+        return this.out.pop();
     }
 
     size(): number {
-        return this.inStack.length + this.outStack.length;
+        return this.in.length + this.out.length;
     }
 
     isEmpty(): boolean {
         return this.size() === 0;
     }
 
-    peekLast(): T | undefined {
-        return this.inStack[this.inStack.length - 1];
+    peekBack(): T | undefined {
+        return this.in[this.in.length - 1];
+    }
+
+    peekFront(): T | undefined {
+        if (this.out.length === 0) {
+            return this.in[0];
+        }
+        return this.out[this.out.length - 1];
     }
 
     *[Symbol.iterator](): IterableIterator<T> {
