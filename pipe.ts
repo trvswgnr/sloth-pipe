@@ -2,8 +2,7 @@ import Queue from "./fifo-queue";
 
 const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
-export const Pipe = (<const T>(_value: T) => {
-    let value = _value as any;
+export const Pipe = (<const T>(value: any) => {
     const fns = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
         for (const { fn, args, tap, catchFn } of fns.drain()) {
