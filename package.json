@@ -1,9 +1,19 @@
 {
     "name": "sloth-pipe",
     "description": "A pipe utility that lazily evaluates only when needed, and only once.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "type": "module",
     "main": "dist/index.js",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./fifo-queue": {
+            "import": "./dist/fifo-queue.js",
+            "require": "./dist/fifo-queue.cjs"
+        }
+    },
     "scripts": {
         "build": "tsup pipe.ts fifo-queue.ts --format cjs,esm --dts --clean --sourcemap",
         "lint": "tsc"
