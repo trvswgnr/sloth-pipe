@@ -9,7 +9,7 @@
 ![dependencies](https://img.shields.io/badge/dependencies-0-orange)
 [![license](https://img.shields.io/github/license/trvswgnr/sloth-pipe)](LICENSE)
 [![open issues](https://badgen.net/github/open-issues/trvswgnr/sloth-pipe?label=issues)](https://github.com/trvswgnr/sloth-pipe/issues)
-![gzip size](https://img.shields.io/badge/gzip%20size-2.8%20KB-8A2BE2)
+![gzip size](https://img.shields.io/badge/gzip%20size-4%20KB-8A2BE2)
 ![follow on xitter](https://img.shields.io/twitter/follow/techsavvytravvy?style=social)
 <!-- end badges -->
 
