@@ -7,6 +7,47 @@ describe("Pipe", () => {
         expect(pipe.exec()).toEqual(5);
     });
 
+    it("should lazily evaluate values", () => {
+        const fn = mock((x) => x);
+        const pipe = Pipe(5)
+            .to(fn)
+            .to((x) => x + 3);
+        expect(fn).not.toHaveBeenCalled();
+        expect(pipe.exec()).toEqual(8);
+        expect(fn).toHaveBeenCalled();
+    });
+
+    it("should lazily evaluate values with tap", () => {
+        const fn = mock((x: number) => x);
+        const fn2 = mock((x: number) => x);
+        const pipe = Pipe(5)
+            .to(fn)
+            .tap(fn2)
+            .to((x) => x + 3);
+        expect(fn).not.toHaveBeenCalled();
+        expect(fn2).not.toHaveBeenCalled();
+        expect(pipe.exec()).toEqual(8);
+        expect(fn).toHaveBeenCalled();
+        expect(fn2).toHaveBeenCalled();
+    });
+
+    it("should only evaluate values once", () => {
+        const fn = mock((x) => x + 1);
+        const fn2 = mock((x) => x + 1);
+        const pipe = Pipe(5)
+            .to(fn)
+            .to((x) => x + 3);
+        expect(fn).not.toHaveBeenCalled();
+        expect(pipe.exec()).toEqual(9);
+        expect(fn).toHaveBeenCalledTimes(1);
+        expect(pipe.exec()).toEqual(9);
+        expect(fn).toHaveBeenCalledTimes(1);
+        pipe.to(fn2);
+        expect(pipe.exec()).toEqual(10);
+        expect(fn).toHaveBeenCalledTimes(1);
+        expect(fn2).toHaveBeenCalledTimes(1);
+    });
+
     describe("to", () => {
         it("should add a function to the pipe and change the value", () => {
             const pipe = Pipe(5).to((x) => x * 2);
@@ -84,7 +125,7 @@ describe("Pipe", () => {
         });
         it("should correctly convert to number", () => {
             const pipe = Pipe(5).to((x) => x * 2);
-            expect(+pipe).toBe(10);
+            expect(0 + pipe).toBe(10);
             const pipe2 = Pipe({ a: 1 }).to((x) => x);
             expect(+pipe2).toBeNaN();
         });
@@ -218,6 +259,8 @@ describe("Pipe", () => {
     });
 
     it("should be practical", () => {
+        const multipleArgs = (x: string, y: number) => x.repeat(y);
+        const multipleArgs2 = (x: string, y: number, z: string) => x.repeat(y) + z;
         const pipe1 = Pipe("hello")
             .to((x) => x.toUpperCase())
             .to((x) => x.split(""))
@@ -228,8 +271,10 @@ describe("Pipe", () => {
             .to((x) => x.split("!"))
             .to((x) => x.join(" "))
             .to((x) => x.trim())
+            .to(multipleArgs, 2)
+            .to(multipleArgs2, 2, "!")
             .exec();
-        expect(pipe1).toBe("OLLEH OLLEH OLLEH");
+        expect(pipe1).toBe("OLLEH OLLEH OLLEHOLLEH OLLEH OLLEHOLLEH OLLEH OLLEHOLLEH OLLEH OLLEH!");
 
         const fn1 = mock((x) => x);
         const fn2 = mock((x) => x);
