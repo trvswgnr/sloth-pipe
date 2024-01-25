@@ -2,6 +2,17 @@
 
 # Sloth Pipe
 
+<!-- start badges -->
+[![github latest release](https://badgen.net/github/tag/trvswgnr/sloth-pipe?label=latest&cache=600)](https://github.com/trvswgnr/sloth-pipe/releases/latest)
+[![npm version](https://badgen.net/npm/v/sloth-pipe?cache=600)](https://www.npmjs.com/package/sloth-pipe)
+![npm weekly downloads](https://img.shields.io/npm/dw/sloth-pipe)
+![dependencies](https://img.shields.io/badge/dependencies-0-orange)
+[![license](https://img.shields.io/github/license/trvswgnr/sloth-pipe)](LICENSE)
+[![open issues](https://badgen.net/github/open-issues/trvswgnr/sloth-pipe?label=issues)](https://github.com/trvswgnr/sloth-pipe/issues)
+![gzip size](https://img.shields.io/badge/gzip%20size-2.8%20KB-8A2BE2)
+![follow on xitter](https://img.shields.io/twitter/follow/techsavvytravvy?style=social)
+<!-- end badges -->
+
 Sloth Pipe is a library for TypeScript and JavaScript designed to facilitate the creation of lazy,
 chainable, and reusable pipes for data transformation and processing. Borrowing from functional
 programming paradigms, it offers a convenient and powerful way to compose functions and manage data
