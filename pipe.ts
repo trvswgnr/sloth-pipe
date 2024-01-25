@@ -166,7 +166,7 @@ type PipedFnTo<T> = {
      * @param args additional arguments to be passed to the function, if any
      * @returns the pipe for further chaining
      */
-    <U, A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "to">;
+    <U, const A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "to">;
     <U>(fn: (x: T) => U): Pipe<T, U, "to">;
     <U>(fn: () => U): Pipe<T, U, "to">;
 };
@@ -179,7 +179,7 @@ type PipedFnTap<T> = {
      * @param args additional arguments to be passed to the function, if any
      * @returns the pipe for further chaining
      */
-    <U, A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "tap">;
+    <U, const A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "tap">;
     <U>(fn: (x: T) => U): Pipe<T, U, "tap">;
     <U>(fn: () => U): Pipe<T, U, "tap">;
 };
