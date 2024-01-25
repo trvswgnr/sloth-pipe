@@ -67,9 +67,13 @@ console.log(result); // Outputs: 13
 Sloth Pipe seamlessly integrates with asynchronous operations:
 
 ```typescript
+const add = async (x: Promise<number>, y: number) => {
+    const xVal = await x;
+    return xVal + y;
+};
 const asyncResult = await Pipe(5)
     .to(async (x) => x * 2)
-    .to((x) => x + 3)
+    .to(add, 3) // pass additional arguments to any function
     .exec();
 
 console.log(asyncResult); // Outputs: 13
