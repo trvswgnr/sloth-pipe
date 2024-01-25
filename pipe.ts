@@ -144,11 +144,10 @@ type QueueItem<T> = {
     tap: boolean;
     catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
 };
-export type Pipe<T, U, M extends PipeMethod<T>> = U extends Promise<any>
+export type Pipe<T, U, M extends keyof Pipeable<T>> = U extends Promise<any>
     ? PipeMethodReturn<T, U, M>
     : PipeMethodReturn<T, U, M> & T;
 
-type PipeMethod<T> = keyof Pipeable<T>;
 type Catchable<T> = { catch: <V>(fn: (err: unknown) => V) => Pipe<T, V | T, "to"> };
 type CatchableTap<T> = { catch: <V>(fn: (err: unknown) => V) => Pipe<T, T, "to"> };
 type PipeMethodReturn<T, U, M> = M extends "to"
@@ -163,7 +162,7 @@ type PipedFnTo<T> = {
     /**
      * takes a function and arguments and adds it to the pipe.
      * when the pipe is executed, the function will be called with the value, setting the value to the result.
-     * @param fn the function to be called
+     * @param fn the function to be called with the value
      * @param args additional arguments to be passed to the function, if any
      * @returns the pipe for further chaining
      */
@@ -171,11 +170,14 @@ type PipedFnTo<T> = {
     <U>(fn: (x: T) => U): Pipe<T, U, "to">;
     <U>(fn: () => U): Pipe<T, U, "to">;
 };
+
 type PipedFnTap<T> = {
     /**
      * takes a function and arguments and adds it to the pipe.
      * when the pipe is executed, the function will be called with the value, but the value will not be changed.
-     * @returns the pipe to be chained
+     * @param fn the function to be called with the value
+     * @param args additional arguments to be passed to the function, if any
+     * @returns the pipe for further chaining
      */
     <U, A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "tap">;
     <U>(fn: (x: T) => U): Pipe<T, U, "tap">;
@@ -183,7 +185,10 @@ type PipedFnTap<T> = {
 };
 
 interface Pipeable<T> {
-    /** the result of the pipe after it's been executed */
+    /**
+     * the result of the pipe after it's been executed.
+     * if the pipe has not been executed, it wil execute it and return the result
+     */
     value: T;
     _: PipedFnTo<T>;
     to: PipedFnTo<T>;
