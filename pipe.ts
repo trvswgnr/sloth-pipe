@@ -1,14 +1,6 @@
 import Queue from "./fifo-queue";
 export const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
-type QueueItem<T> = {
-    fn?: PipedFnTo<T>;
-    args: any[];
-    tap: boolean;
-    catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
-};
-export type Pipe<T, U, M extends PipeMethod<T>> = U extends Promise<any>
-    ? PipeMethodReturn<T, U, M>
-    : PipeMethodReturn<T, U, M> & T;
+
 export const Pipe = (<const T>(_value: T) => {
     let value = _value as any;
     const fns: Queue<QueueItem<T>> = new Queue();
@@ -146,9 +138,17 @@ function definePrivateProperty<X, T>(x: X, key: PropertyKey, value: T) {
     });
 }
 
-const Mask = Symbol("mask");
-type Mask<T> = T & { [Mask]?: true };
-type PipeMethod<T> = Mask<keyof Pipeable<T>>;
+type QueueItem<T> = {
+    fn?: PipedFnTo<T>;
+    args: any[];
+    tap: boolean;
+    catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
+};
+export type Pipe<T, U, M extends PipeMethod<T>> = U extends Promise<any>
+    ? PipeMethodReturn<T, U, M>
+    : PipeMethodReturn<T, U, M> & T;
+
+type PipeMethod<T> = keyof Pipeable<T>;
 type Catchable<T> = { catch: <V>(fn: (err: unknown) => V) => Pipe<T, V | T, "to"> };
 type CatchableTap<T> = { catch: <V>(fn: (err: unknown) => V) => Pipe<T, T, "to"> };
 type PipeMethodReturn<T, U, M> = M extends "to"
