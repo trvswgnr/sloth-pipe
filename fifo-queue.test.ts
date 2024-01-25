@@ -135,7 +135,22 @@ describe("FIFO Queue", () => {
             expect(item).toBe(i++);
         }
 
+        // After iterating, the queue should still be the same
+        expect(queue.size()).toBe(3);
+        expect(queue.isEmpty()).toBe(false);
+
+        const queue2 = new Queue<number>();
+        queue2.enqueue(1);
+        queue2.enqueue(2);
+        queue2.enqueue(3);
+
+        let i2 = 0;
+        for (const item of queue2.drain()) {
+            expect(item).toBe(++i2);
+        }
+
         // After iterating, the queue should be empty
-        expect(queue.isEmpty()).toBe(true);
+        expect(queue2.size()).toBe(0);
+        expect(queue2.isEmpty()).toBe(true);
     });
 });

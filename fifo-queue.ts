@@ -1,47 +1,61 @@
-export default class Queue<T> {
-    private in: T[];
-    private out: T[];
-
-    constructor() {
-        this.in = [];
-        this.out = [];
-    }
+export default class FifoQueue<T> implements Queue<T> {
+    constructor(private queue: T[] = [], private front: number = 0) {}
 
     enqueue(item: T): void {
-        this.in.push(item);
+        this.queue.push(item);
     }
 
     dequeue(): T | undefined {
-        if (this.out.length === 0) {
-            while (this.in.length > 0) {
-                this.out.push(this.in.pop() as T);
-            }
-        }
-        return this.out.pop();
-    }
-
-    size(): number {
-        return this.in.length + this.out.length;
+        if (this.isEmpty()) return undefined;
+        const item = this.queue[this.front];
+        this.front++;
+        return item;
     }
 
     isEmpty(): boolean {
-        return this.size() === 0;
+        return this.front >= this.queue.length;
     }
 
-    peekBack(): T | undefined {
-        return this.in[this.in.length - 1];
+    size(): number {
+        return this.queue.length - this.front;
     }
 
     peekFront(): T | undefined {
-        if (this.out.length === 0) {
-            return this.in[0];
-        }
-        return this.out[this.out.length - 1];
+        return this.queue[this.front];
     }
 
-    *[Symbol.iterator](): IterableIterator<T> {
-        while (this.size() > 0) {
-            yield this.dequeue() as T;
+    peekBack(): T | undefined {
+        return this.queue[this.queue.length - 1];
+    }
+
+    *drain(): IterableIterator<T> {
+        while (!this.isEmpty()) {
+            yield this.dequeue()!;
         }
     }
+
+    *[Symbol.iterator](): Iterator<T> {
+        for (let i = this.front; i < this.queue.length; i++) {
+            yield this.queue[i]!;
+        }
+    }
+}
+
+interface Queue<T> {
+    /** adds an item to the queue */
+    enqueue(item: T): void;
+    /** removes an item from the queue */
+    dequeue(): T | undefined;
+    /** returns the size of the queue */
+    size(): number;
+    /** checks if the queue is empty */
+    isEmpty(): boolean;
+    /** gets the last item in the queue, without removing it */
+    peekBack(): T | undefined;
+    /** gets the first item in the queue, without removing it */
+    peekFront(): T | undefined;
+    /** returns an iterator over the queue, consuming the queue with each iteration */
+    drain(): IterableIterator<T>;
+    /** returns an iterator over the queue without consuming it */
+    [Symbol.iterator](): Iterator<T>;
 }

@@ -3,9 +3,9 @@ export const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
 export const Pipe = (<const T>(_value: T) => {
     let value = _value as any;
-    const fns: Queue<QueueItem<T>> = new Queue();
+    const fns = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
-        for (const { fn, args, tap, catchFn } of fns) {
+        for (const { fn, args, tap, catchFn } of fns.drain()) {
             if (!fn) continue;
             if (tap) {
                 if (catchFn) {
