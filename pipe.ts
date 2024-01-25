@@ -1,10 +1,10 @@
 import Queue from "./fifo-queue";
 export const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 type QueueItem<T> = {
-    fn?: PipedFn<T, "to">;
+    fn?: PipedFnTo<T>;
     args: any[];
     tap: boolean;
-    catchFn?: PipedFn<T, "to">;
+    catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
 };
 export type Pipe<T, U, M extends PipeMethod<T>> = U extends Promise<any>
     ? PipeMethodReturn<T, U, M>
@@ -47,44 +47,25 @@ export const Pipe = (<const T>(_value: T) => {
         }
         return value;
     };
-    const catchable = {
+    const enqueue = (tap: boolean) => {
+        return (fn: (x?: any, ...args: any[]) => any, ...args: any[]) => {
+            fns.enqueue({ fn, args, tap });
+            return ret;
+        };
+    };
+    const ret = {};
+    definePrivateProperties(ret, {
+        to: enqueue(false),
+        _: enqueue(false),
+        tap: enqueue(true),
         catch: (fn: (err: unknown) => any) => {
             const item = fns.peekBack();
             if (!item) return ret;
             item.catchFn = fn as any;
             return ret;
         },
-    };
-    const to = (fn?: (x?: any, ...args: any[]) => any, ...args: any[]) => {
-        fns.enqueue({ fn, args, tap: false });
-        const obj = Object.assign(ret);
-        definePrivateProperty(obj, "catch", catchable.catch);
-        return obj;
-    };
-    const tap = <U extends PipedFn<T, "tap">>(fn: (x?: T, ...args: any[]) => U, ...args: any[]) => {
-        fns.enqueue({ fn: fn as any, args, tap: true });
-        const obj = Object.assign(ret);
-        definePrivateProperty(obj, "catch", catchable.catch);
-        return obj;
-    };
-    const ret = {};
-    definePrivateProperties(ret, {
-        /**
-         * takes a function and arguments and adds it to the pipe.
-         * when the pipe is executed, the function will be called with the value, setting the value to the result.
-         * @returns the pipe to be chained
-         */
-        to,
-        _: to,
-        /**
-         * takes a function and arguments and adds it to the pipe.
-         * when the pipe is executed, the function will be called with the value, but the value will not be changed.
-         * @returns the pipe to be chained
-         */
-        tap,
         exec,
     });
-    // internals
     Object.defineProperty(ret, "value", {
         get() {
             return exec();
@@ -92,6 +73,7 @@ export const Pipe = (<const T>(_value: T) => {
         enumerable: true,
         configurable: false,
     });
+    // internals
     definePrivateProperties(ret, {
         valueOf: exec,
         toJSON: exec,
@@ -118,29 +100,6 @@ export const Pipe = (<const T>(_value: T) => {
 }) as <const T>(x: T) => Pipeable<T>;
 
 /**
- * creates a property that's non-enumerable, non-writable, and non-configurable
- * @param x the object to define the property on
- * @param key the key of the property
- * @param value the value of the property
- * @returns the object passed in
- * @example
- * ```ts
- * const obj = {};
- * definePrivateProperty(obj, "a", 1);
- * console.log(obj.a); // 1
- * console.log(Object.keys(obj)); // []
- * ```
- */
-function definePrivateProperty<X, T>(x: X, key: PropertyKey, value: T) {
-    return Object.defineProperty(x, key, {
-        value,
-        enumerable: false,
-        writable: false,
-        configurable: false,
-    });
-}
-
-/**
  * creates properties that are non-enumerable, non-writable, and non-configurable
  * @param x the object to define the properties on
  * @param props the properties to define
@@ -164,6 +123,29 @@ function definePrivateProperties<X>(x: X, props: Record<PropertyKey, any>) {
     return x;
 }
 
+/**
+ * creates a property that's non-enumerable, non-writable, and non-configurable
+ * @param x the object to define the property on
+ * @param key the key of the property
+ * @param value the value of the property
+ * @returns the object passed in
+ * @example
+ * ```ts
+ * const obj = {};
+ * definePrivateProperty(obj, "a", 1);
+ * console.log(obj.a); // 1
+ * console.log(Object.keys(obj)); // []
+ * ```
+ */
+function definePrivateProperty<X, T>(x: X, key: PropertyKey, value: T) {
+    return Object.defineProperty(x, key, {
+        value,
+        enumerable: false,
+        writable: false,
+        configurable: false,
+    });
+}
+
 const Mask = Symbol("mask");
 type Mask<T> = T & { [Mask]?: true };
 type PipeMethod<T> = Mask<keyof Pipeable<T>>;
@@ -175,34 +157,40 @@ type PipeMethodReturn<T, U, M> = M extends "to"
     ? Pipeable<T> & CatchableTap<T>
     : M extends "catch"
     ? Pipeable<U>
-    : M extends "exec"
-    ? U
     : never;
 
-// prettier-ignore
-type PipedFn<T, M extends PipeMethod<T>> = {
-    <U>(fn: (x: T) => U): Pipe<T, U, M>;
-    <U, A>(fn: (x: T, a: A) => U, a: A): Pipe<T, U, M>;
-    <U, A, B>(fn: (x: T, a: A, b: B) => U, a: A, b: B): Pipe<T, U, M>;
-    <U, A, B, C>(fn: (x: T, a: A, b: B, c: C) => U, a: A, b: B, c: C): Pipe<T, U, M>;
-    <U, A, B, C, D>(fn: (x: T, a: A, b: B, c: C, d: D) => U, a: A, b: B, c: C, d: D): Pipe<T, U, M>;
-    <U, A, B, C, D, E>(fn: (x: T, a: A, b: B, c: C, d: D, e: E) => U, a: A, b: B, c: C, d: D, e: E): Pipe<T, U, M>;
-    <U, A, B, C, D, E, F>(fn: (x: T, a: A, b: B, c: C, d: D, e: E, f: F) => U, a: A, b: B, c: C, d: D, e: E, f: F): Pipe<T, U, M>;
-    <U, A, B, C, D, E, F, G>(fn: (x: T, a: A, b: B, c: C, d: D, e: E, f: F, g: G) => U, a: A, b: B, c: C, d: D, e: E, f: F, g: G): Pipe<T, U, M>;
-    <U, A, B, C, D, E, F, G, H>(fn: (x: T, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => U, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H): Pipe<T, U, M>;
-    <U, A, B, C, D, E, F, G, H, I>(fn: (x: T, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I) => U, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I): Pipe<T, U, M>;
-    <U, A, B, C, D, E, F, G, H, I, J>(fn: (x: T, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J) => U, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J): Pipe<T, U, M>;
-    <U>(fn: (x: T, ...args: unknown[]) => U, ...args: unknown[]): Pipe<T, U, M>;
-    <U>(fn: () => U): Pipe<T, U, M>;
-    (): Pipe<T, T, M>;
+type PipedFnTo<T> = {
+    /**
+     * takes a function and arguments and adds it to the pipe.
+     * when the pipe is executed, the function will be called with the value, setting the value to the result.
+     * @param fn the function to be called
+     * @param args additional arguments to be passed to the function, if any
+     * @returns the pipe for further chaining
+     */
+    <U, A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "to">;
+    <U>(fn: (x: T) => U): Pipe<T, U, "to">;
+    <U>(fn: () => U): Pipe<T, U, "to">;
+};
+type PipedFnTap<T> = {
+    /**
+     * takes a function and arguments and adds it to the pipe.
+     * when the pipe is executed, the function will be called with the value, but the value will not be changed.
+     * @returns the pipe to be chained
+     */
+    <U, A extends readonly any[]>(fn: (x: T, ...args: A) => U, ...args: A): Pipe<T, U, "tap">;
+    <U>(fn: (x: T) => U): Pipe<T, U, "tap">;
+    <U>(fn: () => U): Pipe<T, U, "tap">;
 };
 
 interface Pipeable<T> {
+    /** the result of the pipe after it's been executed */
     value: T;
-    _: PipedFn<T, "to">;
-    to: PipedFn<T, "to">;
-    tap: PipedFn<T, "tap">;
-    exec: PipedFn<T, "exec">;
+    _: PipedFnTo<T>;
+    to: PipedFnTo<T>;
+    tap: PipedFnTap<T>;
+    /** executes the pipe and returns the result */
+    exec: () => T;
+    // internals
     [NODE_INSPECT]: () => string;
     [Symbol.toStringTag]: "Pipe";
     [Symbol.toPrimitive]: (hint: "string" | "number" | "default") => string | number;
