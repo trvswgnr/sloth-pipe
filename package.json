@@ -15,7 +15,7 @@
         }
     },
     "scripts": {
-        "build": "tsup pipe.ts fifo-queue.ts --format cjs,esm --dts --clean --sourcemap",
+        "build": "tsup --dts --clean --sourcemap",
         "lint": "tsc"
     },
     "devDependencies": {
