@@ -1,5 +1,6 @@
 import Queue from "./fifo-queue";
-export const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
+
+const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
 export const Pipe = (<const T>(_value: T) => {
     let value = _value as any;
