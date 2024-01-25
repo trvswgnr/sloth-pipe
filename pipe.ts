@@ -2,7 +2,7 @@ import Queue from "./fifo-queue";
 
 const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
-export const Pipe = (<const T>(value: any) => {
+export const Pipe = <const T>(value: T): Pipeable<T> => {
     const fns = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
         for (const { fn, args, tap, catchFn } of fns.drain()) {
@@ -69,8 +69,8 @@ export const Pipe = (<const T>(value: any) => {
         },
         [NODE_INSPECT]: () => `Pipe(${exec()})`,
     });
-    return ret;
-}) as <const T>(x: T) => Pipeable<T>;
+    return ret as Pipeable<T>;
+};
 
 /**
  * creates properties that are non-enumerable, non-writable, and non-configurable
@@ -136,7 +136,7 @@ function tryCatch(
 }
 
 type QueueItem<T> = {
-    fn?: PipedFnTo<T>;
+    fn?: (x: T, ...args: any[]) => any;
     args: any[];
     tap: boolean;
     catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
