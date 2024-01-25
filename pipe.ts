@@ -1,38 +1,22 @@
 import Queue from "./fifo-queue";
-export const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
-export const Pipe = (<const T>(_value: T) => {
-    let value = _value as any;
+const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
+
+export const Pipe = <const T>(value: T): Pipeable<T> => {
     const fns = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
         for (const { fn, args, tap, catchFn } of fns.drain()) {
             if (!fn) continue;
             if (tap) {
                 if (catchFn) {
-                    try {
-                        if (fn.constructor.name === "AsyncFunction") {
-                            fn(value, ...args).catch(catchFn);
-                            continue;
-                        }
-                        fn(value, ...args);
-                    } catch (err) {
-                        catchFn(err as any);
-                    }
+                    tryCatch(fn, value, args, catchFn);
                     continue;
                 }
                 fn(value, ...args);
                 continue;
             }
             if (catchFn) {
-                try {
-                    if (fn.constructor.name === "AsyncFunction") {
-                        value = fn(value, ...args).catch(catchFn);
-                        continue;
-                    }
-                    value = fn(value, ...args);
-                } catch (err) {
-                    value = catchFn(err as any);
-                }
+                value = tryCatch(fn, value, args, catchFn);
                 continue;
             }
             value = fn(value, ...args);
@@ -45,7 +29,11 @@ export const Pipe = (<const T>(_value: T) => {
             return ret;
         };
     };
-    const ret = {};
+    const ret = {
+        get value() {
+            return exec();
+        },
+    };
     definePrivateProperties(ret, {
         to: enqueue(false),
         _: enqueue(false),
@@ -57,13 +45,6 @@ export const Pipe = (<const T>(_value: T) => {
             return ret;
         },
         exec,
-    });
-    Object.defineProperty(ret, "value", {
-        get() {
-            return exec();
-        },
-        enumerable: true,
-        configurable: false,
     });
     // internals
     definePrivateProperties(ret, {
@@ -88,8 +69,8 @@ export const Pipe = (<const T>(_value: T) => {
         },
         [NODE_INSPECT]: () => `Pipe(${exec()})`,
     });
-    return Object.create(ret);
-}) as <const T>(x: T) => Pipeable<T>;
+    return ret as Pipeable<T>;
+};
 
 /**
  * creates properties that are non-enumerable, non-writable, and non-configurable
@@ -138,12 +119,29 @@ function definePrivateProperty<X, T>(x: X, key: PropertyKey, value: T) {
     });
 }
 
+function tryCatch(
+    fn: (...args: any[]) => any,
+    value: any,
+    args: any[],
+    catchFn: (err: unknown) => any,
+) {
+    try {
+        if (fn.constructor.name === "AsyncFunction") {
+            return fn(value, ...args).catch(catchFn);
+        }
+        return fn(value, ...args);
+    } catch (err) {
+        return catchFn(err as any);
+    }
+}
+
 type QueueItem<T> = {
-    fn?: PipedFnTo<T>;
+    fn?: (x: T, ...args: any[]) => any;
     args: any[];
     tap: boolean;
     catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
 };
+
 export type Pipe<T, U, M extends keyof Pipeable<T>> = U extends Promise<any>
     ? PipeMethodReturn<T, U, M>
     : PipeMethodReturn<T, U, M> & T;
