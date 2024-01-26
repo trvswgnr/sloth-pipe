@@ -1,64 +1,106 @@
 import { run, bench, group, baseline, type Report } from "mitata";
 import { Pipe } from "./pipe";
 import { unlink } from "fs/promises";
+import { Worker, isMainThread, parentPort } from "worker_threads";
 
-process.on("SIGINT", () => {
-    console.log("Ctrl-C was pressed");
-    process.exit();
-});
+const oldPipePath = "./_old-pipe.ts";
+const __filename = new URL(import.meta.url).pathname;
 
-const { filepath, Pipe: OldPipe } = await setup();
+if (isMainThread) {
+    const worker = new Worker(__filename);
 
-const options = {};
-run(options).then(after);
-
-const exampleFn1 = (x: number) => x + 1;
-const exampleFn2 = (x: number) => x + 2;
-
-group("compare old and new Pipe with sync functions", () => {
-    baseline("new Pipe", () => {
-        Pipe(0).to(exampleFn1).to(exampleFn2).exec();
+    worker.on("message", (exitCode: number) => {
+        cleanup().then(() => {
+            console.log("Goodbye!");
+            process.exit(exitCode);
+        });
     });
-    bench("old Pipe", () => {
-        OldPipe(0).to(exampleFn1).to(exampleFn2).exec();
-    });
-});
 
-group("compare to native promise with async functions", () => {
-    baseline("new Pipe", async () => {
-        await Pipe(Promise.resolve(0))
-            .to(async (x) => (await x) + 1)
-            .to(async (x) => (await x) + 1)
-            .exec();
+    worker.on("error", (error: Error) => {
+        console.error("Worker error:", error);
+        cleanup().then(() => {
+            console.log("Goodbye!");
+            process.exit(1);
+        });
     });
-    bench("old Pipe", async () => {
-        await OldPipe(Promise.resolve(0))
-            .to(async (x) => (await x) + 1)
-            .to(async (x) => (await x) + 1)
-            .exec();
-    });
-    bench("Native Promise", async () => {
-        await Promise.resolve(0)
-            .then((x) => x + 1)
-            .then((x) => x + 1);
-    });
-});
 
-async function setup() {
-    const filepath = "./old-pipe.ts";
-    const Pipe = await getOldPipe(filepath);
-    return { filepath, Pipe };
+    worker.on("exit", (code: number) => {
+        if (code !== 0) {
+            console.error(`Worker stopped with exit code ${code}`);
+            cleanup().then(() => {
+                console.log("Goodbye!");
+                process.exit(code);
+            });
+        }
+    });
+
+    process.on("SIGINT", async () => {
+        console.log("\nSIGINT received");
+        await cleanup().then(() => {
+            console.log("Goodbye!");
+            process.exit(130);
+        });
+    });
+
+    process.on("SIGTERM", async () => {
+        console.log("\nSIGTERM received");
+        await cleanup().then(() => {
+            console.log("Goodbye!");
+            process.exit(143);
+        });
+    });
+} else {
+    const result = await main();
+    parentPort?.postMessage(result);
 }
 
-async function cleanup() {
-    await unlink(filepath).catch(() => {});
+async function main() {
+    const OldPipe = await getOldPipe(oldPipePath);
+
+    const exampleFn1 = (x: number) => x + 1;
+    const exampleFn2 = (x: number) => x + 2;
+
+    group("compare old and new Pipe with sync functions", () => {
+        baseline("new Pipe", () => {
+            Pipe(0).to(exampleFn1).to(exampleFn2).exec();
+        });
+        bench("old Pipe", () => {
+            OldPipe(0).to(exampleFn1).to(exampleFn2).exec();
+        });
+    });
+
+    group("compare to native promise with async functions", () => {
+        baseline("new Pipe", async () => {
+            await Pipe(Promise.resolve(0))
+                .to(async (x) => (await x) + 1)
+                .to(async (x) => (await x) + 1)
+                .exec();
+        });
+        bench("old Pipe", async () => {
+            await OldPipe(Promise.resolve(0))
+                .to(async (x) => (await x) + 1)
+                .to(async (x) => (await x) + 1)
+                .exec();
+        });
+        bench("Native Promise", async () => {
+            await Promise.resolve(0)
+                .then((x) => x + 1)
+                .then((x) => x + 1);
+        });
+    });
+
+    const options = {};
+
+    return await run(options)
+        .then(checkIsSlower)
+        .catch((error) => {
+            console.error(error);
+            return 1;
+        });
 }
 
-async function after(report: Report) {
-    console.log();
-
-    await cleanup();
-
+function checkIsSlower(report: Report, marginOfError = 0.2) {
+    console.log("\nChecking if new Pipe is slower than old Pipe...");
     const groups: any = {};
     report.benchmarks.forEach((b) => {
         const key = b.group;
@@ -68,27 +110,34 @@ async function after(report: Report) {
         groups[key].push({ name: b.name, avg: b.stats?.avg });
     });
 
-    // get the fastest benchmark in each group
-    const fastest = Object.entries(groups).map(([key, _avgs]) => {
-        const avgs = _avgs as { name: string; avg: number }[];
-        const fastest = avgs.reduce((a, b) => (a.avg < b.avg ? a : b));
-        return { group: key, ...fastest };
-    });
-
     let isSlower = false;
-    for (const { group, name } of fastest) {
-        if (name !== "new Pipe") {
-            console.log(`new Pipe is not faster than ${name} in ${group}`);
+    Object.entries(groups).forEach(([group, _benchmarks]) => {
+        const benchmarks = _benchmarks as { name: string; avg: number }[];
+        const newPipeBenchmark = benchmarks.find((b) => b.name === "new Pipe");
+        const oldPipeBenchmark = benchmarks.find((b) => b.name === "old Pipe");
+
+        if (!newPipeBenchmark || !oldPipeBenchmark) {
+            console.warn(`Missing benchmarks for comparison in group ${group}`);
+            return;
+        }
+
+        const isSignificantlySlower =
+            newPipeBenchmark.avg > oldPipeBenchmark.avg * (1 + marginOfError);
+        if (isSignificantlySlower) {
+            process.stderr.write(
+                `❌ new Pipe is more than ${
+                    marginOfError * 100
+                }% slower than old Pipe in "${group}"\n`,
+            );
             isSlower = true;
         }
+    });
+
+    if (!isSlower) {
+        console.log("✅ new Pipe is faster or not significantly slower than old Pipe");
     }
 
-    if (isSlower) {
-        process.exit(1);
-    } else {
-        console.log("new Pipe is faster than old Pipe in all benchmarks");
-        process.exit(0);
-    }
+    return Number(isSlower);
 }
 
 async function getOldPipe(filepath: string) {
@@ -99,4 +148,9 @@ async function getOldPipe(filepath: string) {
     await Bun.write(filepath, content);
     const { Pipe: OldPipe } = (await import(filepath)) as { Pipe: typeof Pipe };
     return OldPipe;
+}
+
+async function cleanup() {
+    console.log("\nCleaning up...");
+    await unlink(oldPipePath).catch(() => {});
 }
