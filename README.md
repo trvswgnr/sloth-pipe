@@ -3,6 +3,7 @@
 # Sloth Pipe
 
 <!-- start badges -->
+
 [![github latest release](https://badgen.net/github/tag/trvswgnr/sloth-pipe?label=latest&cache=600)](https://github.com/trvswgnr/sloth-pipe/releases/latest)
 [![npm version](https://badgen.net/npm/v/sloth-pipe?cache=600)](https://www.npmjs.com/package/sloth-pipe)
 ![npm weekly downloads](https://img.shields.io/npm/dw/sloth-pipe)
@@ -11,12 +12,23 @@
 [![open issues](https://badgen.net/github/open-issues/trvswgnr/sloth-pipe?label=issues)](https://github.com/trvswgnr/sloth-pipe/issues)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/sloth-pipe)](https://bundlephobia.com/result?p=sloth-pipe)
 ![follow on xitter](https://img.shields.io/twitter/follow/techsavvytravvy?style=social)
+
 <!-- end badges -->
 
-Sloth Pipe is a tiny library for TypeScript and JavaScript designed to facilitate the creation of lazy,
-chainable, and reusable pipes for data transformation and processing. Borrowing from functional
-programming paradigms, it offers a convenient and powerful way to compose functions and manage data
-flow in an application, with an emphasis on lazy evaluation and efficient execution.
+Sloth Pipe is a tiny library for TypeScript and JavaScript that lets you create lazy, chainable, and
+reusable pipes for data transformation and processing. Borrowing from functional programming
+paradigms, it offers a convenient and powerful way to compose functions and manage data flow in an
+application, with an emphasis on lazy evaluation and efficient execution.
+
+## Why Sloth Pipe?
+
+Developers want pipes. They've been one of the
+[most requested features](https://2020.stateofjs.com/en-US/opinions/#missing_from_js) in JavaScript
+[for years](https://2022.stateofjs.com/en-US/opinions/#top_currently_missing_from_js), and there's
+even a [Stage 2 proposal](https://github.com/tc39/proposal-pipeline-operator) for adding them to the
+language. Sloth Pipe isn't a direct replacement for the proposed pipeline operator, but it does
+offer a similar experience and many of the
+[same benefits](https://github.com/tc39/proposal-pipeline-operator#why-a-pipe-operator).
 
 ## Features
 
