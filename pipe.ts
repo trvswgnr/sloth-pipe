@@ -67,53 +67,6 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
     return ret as unknown as Pipeable<T>;
 };
 
-/**
- * creates properties that are non-enumerable, non-writable, and non-configurable
- * @param x the object to define the properties on
- * @param props the properties to define
- * @returns the object passed in
- * @example
- * ```ts
- * const obj = {};
- * definePrivateProperties(obj, { a: 1, b: 2 });
- * console.log(obj.a); // 1
- * console.log(obj.b); // 2
- * console.log(Object.keys(obj)); // []
- * ```
- */
-function definePrivateProperties<X>(x: X, props: Record<PropertyKey, any>) {
-    const entries = Object.entries(props);
-    const symbols = Object.getOwnPropertySymbols(props).map((symbol) => [symbol, props[symbol]]);
-    const entriesAndSymbols = [...entries, ...symbols];
-    for (const [key, value] of entriesAndSymbols) {
-        definePrivateProperty(x, key, value);
-    }
-    return x;
-}
-
-/**
- * creates a property that's non-enumerable, non-writable, and non-configurable
- * @param x the object to define the property on
- * @param key the key of the property
- * @param value the value of the property
- * @returns the object passed in
- * @example
- * ```ts
- * const obj = {};
- * definePrivateProperty(obj, "a", 1);
- * console.log(obj.a); // 1
- * console.log(Object.keys(obj)); // []
- * ```
- */
-function definePrivateProperty<X, T>(x: X, key: PropertyKey, value: T) {
-    return Object.defineProperty(x, key, {
-        value,
-        enumerable: false,
-        writable: false,
-        configurable: false,
-    });
-}
-
 function tryCatch(
     fn: (...args: any[]) => any,
     value: any,
