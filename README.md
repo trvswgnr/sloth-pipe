@@ -9,11 +9,11 @@
 ![dependencies](https://img.shields.io/badge/dependencies-0-orange)
 [![license](https://img.shields.io/github/license/trvswgnr/sloth-pipe)](LICENSE)
 [![open issues](https://badgen.net/github/open-issues/trvswgnr/sloth-pipe?label=issues)](https://github.com/trvswgnr/sloth-pipe/issues)
-![gzip size](https://img.shields.io/badge/gzip%20size-4%20KB-8A2BE2)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/sloth-pipe)](https://bundlephobia.com/result?p=sloth-pipe)
 ![follow on xitter](https://img.shields.io/twitter/follow/techsavvytravvy?style=social)
 <!-- end badges -->
 
-Sloth Pipe is a library for TypeScript and JavaScript designed to facilitate the creation of lazy,
+Sloth Pipe is a tiny library for TypeScript and JavaScript designed to facilitate the creation of lazy,
 chainable, and reusable pipes for data transformation and processing. Borrowing from functional
 programming paradigms, it offers a convenient and powerful way to compose functions and manage data
 flow in an application, with an emphasis on lazy evaluation and efficient execution.
