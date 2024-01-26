@@ -33,8 +33,6 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
         get value() {
             return exec();
         },
-    };
-    definePrivateProperties(ret, {
         to: enqueue(false),
         _: enqueue(false),
         tap: enqueue(true),
@@ -45,9 +43,6 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
             return ret;
         },
         exec,
-    });
-    // internals
-    definePrivateProperties(ret, {
         valueOf: exec,
         toJSON: exec,
         toString: () => String(exec()),
@@ -68,8 +63,8 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
             };
         },
         [NODE_INSPECT]: () => `Pipe(${exec()})`,
-    });
-    return ret as Pipeable<T>;
+    };
+    return ret as unknown as Pipeable<T>;
 };
 
 /**

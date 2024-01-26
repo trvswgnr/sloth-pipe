@@ -158,10 +158,9 @@ describe("Pipe", () => {
         it("should correctly convert to object", () => {
             const pipe = Pipe(5).to((x) => x * 2);
             // @ts-expect-error - "Spread types may only be created from object types"
-            expect({ ...pipe }).toEqual({ value: 10 });
+            expect({ ...pipe }).toMatchObject({ value: 10 });
             const pipe2 = Pipe({ a: 1 }).to((x) => x);
-            // @ts-expect-error - literal object won't have all the properties
-            expect({ ...pipe2 }).toEqual({ value: { a: 1 } });
+            expect({ ...pipe2 }).toMatchObject({ value: { a: 1 } });
             const pipe3 = Pipe([1]).to((x) => x);
             expect([...pipe3, 2]).toEqual([1, 2]);
         });
@@ -297,4 +296,10 @@ describe("Pipe", () => {
         expect(fn3).toHaveBeenCalledWith(225);
         expect(pipe2).toBe("00E1");
     });
+
+    it("should not regress performance", async () => {
+        const { exited } = Bun.spawn(["bun", "./pipe.bench.ts"], { stdout: "pipe" });
+        const code = await exited;
+        expect(code).toBe(0);
+    }, 20000);
 });

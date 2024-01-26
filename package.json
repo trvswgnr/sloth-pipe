@@ -16,7 +16,8 @@
     },
     "scripts": {
         "build": "tsup",
-        "lint": "tsc"
+        "lint": "tsc",
+        "bench": "bun ./pipe.bench.ts"
     },
     "devDependencies": {
         "bun-types": "1.0.20",
