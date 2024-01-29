@@ -54,7 +54,7 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
             if (typeof val === "object" && val !== null && Symbol.iterator in val) {
                 const iter = val[Symbol.iterator];
                 if (typeof iter === "function") {
-                    return iter();
+                    return iter.call(val);
                 }
             }
             return {
