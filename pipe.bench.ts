@@ -89,28 +89,30 @@ async function main() {
         });
     });
 
-    // some extra micro benchmarks:
-    printMicroDiff(
-        microBench("New Pipe", 10, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
-        microBench("Old Pipe", 10, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
-    );
+    if (process.argv.includes("--micro")) {
+        // some extra micro benchmarks:
+        printMicroDiff(
+            microBench("New Pipe", 10, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
+            microBench("Old Pipe", 10, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
+        );
 
-    printMicroDiff(
-        microBench("New Pipe", 1000000, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
-        microBench("Old Pipe", 1000000, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
-    );
+        printMicroDiff(
+            microBench("New Pipe", 1000000, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
+            microBench("Old Pipe", 1000000, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
+        );
 
-    printTimeDiff(
-        timeBench("New Pipe", 1, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
-        timeBench("Old Pipe", 1, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
-    );
+        printTimeDiff(
+            timeBench("New Pipe", 1, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
+            timeBench("Old Pipe", 1, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
+        );
 
-    printTimeDiff(
-        timeBench("New Pipe", 5, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
-        timeBench("Old Pipe", 5, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
-    );
+        printTimeDiff(
+            timeBench("New Pipe", 5, () => Pipe(0).to(exampleFn1).to(exampleFn2)),
+            timeBench("Old Pipe", 5, () => OldPipe(0).to(exampleFn1).to(exampleFn2).exec()),
+        );
 
-    console.log();
+        console.log();
+    }
 
     const options = {};
 
