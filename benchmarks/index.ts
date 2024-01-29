@@ -5,6 +5,7 @@ import { Pipe as SlothPipe } from "../pipe";
 const exampleFn1 = (x: number) => x + 1;
 const exampleFn2 = (x: number) => x + 2;
 const spipe = SlothPipe(0).to(exampleFn1).to(exampleFn2);
+
 group("compare vs libs with sync functions", () => {
     baseline("Sloth Pipe", () => {
         spipe.exec();
@@ -14,12 +15,12 @@ group("compare vs libs with sync functions", () => {
     });
 });
 
+const asyncSpipe = SlothPipe(Promise.resolve(0))
+    .to(async (x) => (await x) + 1)
+    .to(async (x) => (await x) + 1);
 group("compare to libs with async functions", () => {
     baseline("Sloth Pipe", async () => {
-        await SlothPipe(Promise.resolve(0))
-            .to(async (x) => (await x) + 1)
-            .to(async (x) => (await x) + 1)
-            .exec();
+        await asyncSpipe.exec();
     });
     bench("Effect Pipe", async () => {
         await EffectPipe(
@@ -38,9 +39,15 @@ group("compare to libs with async functions", () => {
 await run();
 
 // some extra micro benchmarks:
-
+const spipe2 = SlothPipe(0).to(exampleFn1).to(exampleFn2);
 printMicroDiff(
-    microBench("Sloth Pipe", 1000000, () => spipe.exec()),
+    microBench("Sloth Pipe", 1000000, () => spipe2.exec()),
+    microBench("Effect Pipe", 1000000, () => EffectPipe(0, exampleFn1, exampleFn2)),
+);
+
+const spipe3 = SlothPipe(0).to(exampleFn1).to(exampleFn2);
+printMicroDiff(
+    microBench("Sloth Pipe", 1000000, () => spipe3.exec()),
     microBench("Effect Pipe", 1000000, () => EffectPipe(0, exampleFn1, exampleFn2)),
 );
 
