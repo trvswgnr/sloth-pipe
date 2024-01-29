@@ -6,18 +6,22 @@ export default class FifoQueue<T> implements Queue<T> {
     }
 
     dequeue(): T | undefined {
-        if (this.isEmpty()) return undefined;
+        if (this.empty()) return undefined;
         const item = this.queue[this.front];
         this.front++;
         return item;
     }
 
-    isEmpty(): boolean {
+    empty(): boolean {
         return this.front >= this.queue.length;
     }
 
     size(): number {
         return this.queue.length - this.front;
+    }
+
+    get length(): number {
+        return this.size();
     }
 
     peekFront(): T | undefined {
@@ -29,7 +33,7 @@ export default class FifoQueue<T> implements Queue<T> {
     }
 
     *drain(): IterableIterator<T> {
-        while (!this.isEmpty()) {
+        while (!this.empty()) {
             yield this.dequeue()!;
         }
     }
@@ -48,8 +52,10 @@ interface Queue<T> {
     dequeue(): T | undefined;
     /** returns the size of the queue */
     size(): number;
+    /** returns the size of the queue */
+    length: number;
     /** checks if the queue is empty */
-    isEmpty(): boolean;
+    empty(): boolean;
     /** gets the last item in the queue, without removing it */
     peekBack(): T | undefined;
     /** gets the first item in the queue, without removing it */
