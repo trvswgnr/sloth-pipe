@@ -3,9 +3,39 @@ import Queue from "./fifo-queue";
 const NODE_INSPECT = Symbol.for("nodejs.util.inspect.custom");
 
 export const Pipe = <const T>(value: T): Pipeable<T> => {
-    const fns = new Queue<QueueItem<T>>();
+    let hasTap = false;
+    let hasCatch = false;
+    const queue = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
-        for (const { fn, args, tap, catchFn } of fns.drain()) {
+        if (queue.empty()) return value;
+        if (!hasTap && !hasCatch) {
+            switch (queue.length) {
+                case 0:
+                    return value;
+                case 1: {
+                    const item = queue.dequeue()!;
+                    value = item.fn(value, ...item.args);
+                    return value;
+                }
+                case 2: {
+                    const item1 = queue.dequeue()!;
+                    const item2 = queue.dequeue()!;
+                    value = item2.fn(item1.fn(value, ...item1.args), ...item2.args);
+                    return value;
+                }
+                case 3: {
+                    const item1 = queue.dequeue()!;
+                    const item2 = queue.dequeue()!;
+                    const item3 = queue.dequeue()!;
+                    // prettier-ignore
+                    value = item3.fn(item2.fn(item1.fn(value, ...item1.args), ...item2.args), ...item3.args);
+                    return value;
+                }
+                default:
+                    break;
+            }
+        }
+        for (const { fn, args, tap, catchFn } of queue.drain()) {
             if (tap) {
                 if (catchFn) {
                     tryCatch(fn, value, args, catchFn);
@@ -22,22 +52,23 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
         }
         return value;
     };
-    const enqueue = (tap: boolean) => {
-        return (fn: (x?: any, ...args: any[]) => any, ...args: any[]) => {
-            fns.enqueue({ fn, args, tap, catchFn: undefined });
-            return ret;
-        };
-    };
     const ret = {
         get value() {
             return exec();
         },
-        to: enqueue(false),
-        _: enqueue(false),
-        tap: enqueue(true),
+        to: (fn: (x?: any, ...args: any[]) => any, ...args: any[]) => {
+            queue.enqueue({ fn, args, tap: false, catchFn: undefined });
+            return ret;
+        },
+        tap: (fn: (x?: any, ...args: any[]) => any, ...args: any[]) => {
+            hasTap = true;
+            queue.enqueue({ fn, args, tap: true, catchFn: undefined });
+            return ret;
+        },
         catch: (fn: (err: unknown) => any) => {
-            const item = fns.peekBack();
-            if (!item) return ret;
+            hasCatch = true;
+            const item = queue.peekBack();
+            if (!item) throw new Error("cannot catch without a previous function");
             item.catchFn = fn as any;
             return ret;
         },
@@ -137,7 +168,6 @@ interface Pipeable<T> {
      * if the pipe has not been executed, it wil execute it and return the result
      */
     value: T;
-    _: PipedFnTo<T>;
     to: PipedFnTo<T>;
     tap: PipedFnTap<T>;
     /** executes the pipe and returns the result */

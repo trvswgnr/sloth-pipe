@@ -10,13 +10,13 @@ describe("FIFO Queue", () => {
 
     test("should initialize an empty queue", () => {
         expect(queue.size()).toBe(0);
-        expect(queue.isEmpty()).toBe(true);
+        expect(queue.empty()).toBe(true);
     });
 
     test("should enqueue items to the queue", () => {
         queue.enqueue(1);
         expect(queue.size()).toBe(1);
-        expect(queue.isEmpty()).toBe(false);
+        expect(queue.empty()).toBe(false);
 
         queue.enqueue(2);
         expect(queue.size()).toBe(2);
@@ -31,7 +31,7 @@ describe("FIFO Queue", () => {
 
         expect(queue.dequeue()).toBe(2);
         expect(queue.size()).toBe(0);
-        expect(queue.isEmpty()).toBe(true);
+        expect(queue.empty()).toBe(true);
     });
 
     test("should return undefined when dequeueing an empty queue", () => {
@@ -103,7 +103,7 @@ describe("FIFO Queue", () => {
             expect(queue.dequeue()).toBe(i);
         }
 
-        expect(queue.isEmpty()).toBe(true);
+        expect(queue.empty()).toBe(true);
     });
 
     test("should handle different types of data", () => {
@@ -137,7 +137,7 @@ describe("FIFO Queue", () => {
 
         // After iterating, the queue should still be the same
         expect(queue.size()).toBe(3);
-        expect(queue.isEmpty()).toBe(false);
+        expect(queue.empty()).toBe(false);
 
         const queue2 = new Queue<number>();
         queue2.enqueue(1);
@@ -151,6 +151,6 @@ describe("FIFO Queue", () => {
 
         // After iterating, the queue should be empty
         expect(queue2.size()).toBe(0);
-        expect(queue2.isEmpty()).toBe(true);
+        expect(queue2.empty()).toBe(true);
     });
 });
