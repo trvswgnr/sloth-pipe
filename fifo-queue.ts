@@ -1,5 +1,5 @@
 export default class FifoQueue<T> implements Queue<T> {
-    constructor(private queue: T[] = [], private front: number = 0) {}
+    constructor(private queue: (T | undefined)[] = [], private front: number = 0) {}
 
     enqueue(item: T): void {
         this.queue.push(item);
@@ -8,6 +8,7 @@ export default class FifoQueue<T> implements Queue<T> {
     dequeue(): T | undefined {
         if (this.empty()) return undefined;
         const item = this.queue[this.front];
+        this.queue[this.front] = undefined; // allow garbage collection
         this.front++;
         return item;
     }
