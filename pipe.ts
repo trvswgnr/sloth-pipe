@@ -6,7 +6,6 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
     const fns = new Queue<QueueItem<T>>();
     const exec = (): unknown => {
         for (const { fn, args, tap, catchFn } of fns.drain()) {
-            if (!fn) continue;
             if (tap) {
                 if (catchFn) {
                     tryCatch(fn, value, args, catchFn);
@@ -25,7 +24,7 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
     };
     const enqueue = (tap: boolean) => {
         return (fn: (x?: any, ...args: any[]) => any, ...args: any[]) => {
-            fns.enqueue({ fn, args, tap });
+            fns.enqueue({ fn, args, tap, catchFn: undefined });
             return ret;
         };
     };
@@ -86,7 +85,7 @@ function tryCatch(
 }
 
 type QueueItem<T> = {
-    fn?: (x: T, ...args: any[]) => any;
+    fn: (x: T, ...args: any[]) => any;
     args: any[];
     tap: boolean;
     catchFn?: (err: unknown) => Pipeable<unknown> & Catchable<unknown> & T;
