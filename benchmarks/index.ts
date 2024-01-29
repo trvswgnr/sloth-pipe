@@ -4,17 +4,13 @@ import { Pipe as SlothPipe } from "../pipe";
 
 const exampleFn1 = (x: number) => x + 1;
 const exampleFn2 = (x: number) => x + 2;
-const arr: any[] = [];
+const spipe = SlothPipe(0).to(exampleFn1).to(exampleFn2);
 group("compare vs libs with sync functions", () => {
     baseline("Sloth Pipe", () => {
-        const x = SlothPipe(0).to(exampleFn1).to(exampleFn2).exec();
-        const y = x + 1;
-        arr.push(y);
+        spipe.exec();
     });
     bench("Effect Pipe", () => {
-        const x = EffectPipe(0, exampleFn1, exampleFn2);
-        const y = x + 1;
-        arr.push(y);
+        EffectPipe(0, exampleFn1, exampleFn2);
     });
 });
 
