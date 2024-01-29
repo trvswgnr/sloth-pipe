@@ -53,8 +53,10 @@ export const Pipe = <const T>(value: T): Pipeable<T> => {
         [Symbol.iterator]: (): Iterator<T> => {
             const val = exec();
             if (typeof val === "object" && val !== null && Symbol.iterator in val) {
-                // @ts-expect-error this is fine, we checked for it
-                return val[Symbol.iterator]();
+                const iter = val[Symbol.iterator];
+                if (typeof iter === "function") {
+                    return iter();
+                }
             }
             return {
                 next() {
