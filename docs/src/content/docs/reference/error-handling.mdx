@@ -1,0 +1,21 @@
+---
+title: Error Handling
+description: How to handle errors with sloth-pipe
+---
+
+`sloth-pipe` allows handling errors that may occur during function execution in the pipeline. When an
+error is thrown in a `to` or `tap` method, the `catch` method is invoked if it is defined. This does
+not stop the pipeline from executing, but it does allow for graceful error handling.
+
+**Example**:
+
+```typescript
+const result = Pipe(5)
+    .to((x) => {
+        throw new Error("Example Error");
+    })
+    .catch((err) => "Error occurred")
+    .exec();
+
+console.log(result); // Outputs: "Error occurred"
+```
