@@ -17,7 +17,7 @@ export default defineConfig({
             ],
             editLink: {
 				baseUrl:
-					"https://github.com/florian-lefebvre/astro-integration-kit/edit/main/docs/",
+					"https://github.com/trvswgnr/sloth-pipe/edit/main/docs/",
 			},
             lastUpdated: true,
             sidebar: [
