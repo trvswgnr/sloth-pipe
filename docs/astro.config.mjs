@@ -13,6 +13,11 @@ export default defineConfig({
                 // Relative path to your custom CSS file
                 './src/styles/custom.css',
             ],
+            editLink: {
+				baseUrl:
+					"https://github.com/florian-lefebvre/astro-integration-kit/edit/main/docs/",
+			},
+            lastUpdated: true,
             sidebar: [
                 {
                     label: 'Getting started',
