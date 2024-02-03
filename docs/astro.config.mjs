@@ -19,7 +19,7 @@ export default defineConfig({
                 github: 'https://github.com/trvswgnr/sloth-pipe',
                 "x.com": "https://twitter.com/techsavvytravvy",
             },
-            favicon: '/public/favicon.ico',
+            favicon: '/favicon.ico',
             head: [
 				{
 					tag: 'meta',
