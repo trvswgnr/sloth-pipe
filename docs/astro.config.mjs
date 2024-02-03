@@ -7,8 +7,7 @@ const VERCEL_PREVIEW_SITE =
 	process.env.VERCEL_URL &&
 	`https://${process.env.VERCEL_URL}`;
 
-//TODO: Fix this
-const site = VERCEL_PREVIEW_SITE || 'https://slothpipe.techsavvytravvy.com/';
+const site = VERCEL_PREVIEW_SITE || 'https://sloth-pipe.vercel.app/';
 
 
 // https://astro.build/config
