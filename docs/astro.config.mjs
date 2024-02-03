@@ -10,7 +10,7 @@ export default defineConfig({
                 github: 'https://github.com/trvswgnr/sloth-pipe',
                 "x.com": "https://twitter.com/techsavvytravvy",
             },
-            favicon: '/images/favicon.ico',
+            favicon: '/public/favicon.ico',
             customCss: [
                 // Relative path to your custom CSS file
                 './src/styles/custom.css',
