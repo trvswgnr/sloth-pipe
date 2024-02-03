@@ -1,4 +1,4 @@
-![sloth-pipe](/docs/public/readme-banner.png)
+![sloth-pipe](/docs/src/assets/readme-banner.png)
 
 # Sloth Pipe
 
