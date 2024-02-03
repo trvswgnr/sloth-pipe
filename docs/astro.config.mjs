@@ -8,6 +8,7 @@ export default defineConfig({
             title: 'Sloth Pipe',
             social: {
                 github: 'https://github.com/trvswgnr/sloth-pipe',
+                "x.com": "https://twitter.com/techsavvytravvy",
             },
             customCss: [
                 // Relative path to your custom CSS file
@@ -29,7 +30,12 @@ export default defineConfig({
                 },
                 {
                     label: 'Reference',
-                    autogenerate: { directory: 'reference' },
+                    items: [
+                        { label: 'Pipe Function', link: '/reference/pipe-function/' },
+                        { label: 'Methods', link: '/reference/methods/' },
+                        { label: 'Error Handling', link: '/reference/error-handling/' },
+                        { label: 'Async Await Support', link: '/reference/async-await-support/' },
+                    ],
                 },
             ],
         }),
