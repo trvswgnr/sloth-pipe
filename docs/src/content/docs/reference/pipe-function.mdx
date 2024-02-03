@@ -1,0 +1,26 @@
+---
+title: Pipe Function
+description: Overview of the Pipe function.
+---
+
+The Pipe function is the cornerstone of the Sloth Pipe library. It serves as the entry point for
+creating a new pipe, setting the stage for a series of transformations or operations to be performed
+on an initial value. By accepting an initial value as its parameter, it instantiates a Pipeable
+object. This object then becomes the conduit through which data flows and transforms, leveraging the
+library's functional programming capabilities.
+
+### Pipe\<T>(initialValue: T): Pipeable\<T>
+
+Creates a new pipe with an initial value.
+
+**Parameters**:
+
+-   `initialValue`: The starting value for the pipe.
+
+**Returns**: A `Pipeable` object representing the pipe.
+
+**Example**:
+
+```typescript
+const pipe = Pipe(10);
+```

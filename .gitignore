@@ -1,52 +1,34 @@
+# macOS-specific files
 .DS_Store
+
+# Windows-specific files
 Thumbs.db
+
+# Jetbrains specific files
 .idea
+
+# Environment variables
 .env
+.env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.local
-_scratch*
-logs
-_.log
+
+# Node modules and logs
+node_modules/
 npm-debug.log_
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 .cache
-report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
-pids
-_.pid
-_.seed
-*.pid.lock
-lib-cov
-coverage
-*.lcov
-.nyc_output
-.grunt
-bower_components
-.lock-wscript
-build/Release
-node_modules/
-jspm_packages/
-web_modules/
-*.tsbuildinfo
-.npm
-.eslintcache
-.stylelintcache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-.node_repl_history
 *.tgz
 .yarn-integrity
 .parcel-cache
 .next
-out
+.out
 .nuxt
-dist
+.dist
 .vuepress/dist
 .temp
 .docusaurus
@@ -59,4 +41,70 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Debug logs
+_scratch*
+logs
+_.log
+
+# Report files
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# Process IDs
+pids
+_.pid
+_.seed
+*.pid.lock
+
+# Coverage reports
+lib-cov
+coverage
+*.lcov
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower components
+bower_components
+
+# Node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# JSPM packages
+jspm_packages/
+
+# Web modules
+web_modules/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# NPM debug logs
+.npm
+
+# Linter caches
+.eslintcache
+.stylelintcache
+
+# Rollup plugin caches
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Node.js REPL history
+.node_repl_history
+
+# Visual Studio Code
+.vscode
 .vscode-test
+
+# generated types from Astro
+.astro/
+
+# Astro's build output
+dist/

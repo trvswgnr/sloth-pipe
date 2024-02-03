@@ -1,0 +1,19 @@
+---
+title: Async Await Support
+description: sloth-pipe supports asynchronous operations within the pipeline.
+---
+
+`sloth-pipe` supports asynchronous operations within the pipeline. Functions passed to `to` or `tap`
+can be asynchronous, and `exec` will return a Promise if any function in the pipeline is
+asynchronous.
+
+**Async Example**:
+
+```typescript
+const asyncResult = await Pipe(5)
+    .to(async (x) => x * 2)
+    .to(async (x) => x + 3)
+    .exec();
+
+console.log(asyncResult); // Outputs: 13
+```

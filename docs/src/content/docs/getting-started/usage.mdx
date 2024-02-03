@@ -1,0 +1,59 @@
+---
+title: Usage
+description: Learn how to use sloth-pipe in your projects.
+---
+
+Sloth Pipe is a functional library designed to streamline the process of applying a sequence of
+transformations to a value in TypeScript. It enables chaining multiple operations in a clear and
+readable manner.
+
+## Importing the Library
+
+Begin by importing the Pipe function from the sloth-pipe library:
+
+```ts
+import { Pipe } from "sloth-pipe";
+```
+
+## Initializing the Pipe
+
+Create a new pipe instance by calling Pipe() with the initial value. This value is the starting
+point for subsequent transformations:
+
+```ts
+const pipeInstance = Pipe(5);
+```
+
+## Applying Transformations
+
+Use the .to() method to define transformations. Each .to() takes a function as an argument. This
+function describes how the current value should be transformed:
+
+The first transformation multiplies the input by 2:
+
+```ts
+.to((x) => x * 2)
+```
+
+The second transformation adds 3 to the result of the first transformation:
+
+```ts
+.to((x) => x + 3)
+```
+
+## Executing the Pipe
+
+Complete the chain of transformations with the .exec() method. This method executes the
+transformations in sequence and returns the final result:
+
+```ts
+const result = pipeInstance.exec();
+```
+
+## Output:
+
+The final result can be used as needed. In this example, it's logged to the console:
+
+```ts
+console.log(result); // Outputs: 13
+```
