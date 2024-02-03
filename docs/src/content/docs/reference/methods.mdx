@@ -1,0 +1,74 @@
+---
+title: Methods
+description: Exploring the methods of sloth-pipe.
+---
+
+## `to`
+
+### pipe.to(fn: Function, ...args: any[]): Pipeable
+
+Adds a transformation function to the pipe.
+
+**Parameters**:
+
+-   `fn`: Function to be applied to the current value.
+-   `args`: Additional arguments to pass to the function.
+
+**Returns**: The modified `Pipeable` object for chaining.
+
+**Example**:
+
+```typescript
+pipe.to((x) => x * 2);
+```
+
+## `tap`
+
+### pipe.tap(fn: Function, ...args: any[]): Pipeable
+
+Adds a side-effect function to the pipe without altering the value.
+
+**Parameters**:
+
+-   `fn`: Side-effect function to be applied.
+-   `args`: Additional arguments to pass to the function.
+
+**Returns**: The modified `Pipeable` object for chaining.
+
+**Example**:
+
+```typescript
+pipe.tap((x) => console.log(x));
+```
+
+## `exec`
+
+### pipe.exec(): any
+
+Executes the pipe and returns the final value.
+
+**Returns**: The final value after applying all functions in the pipe.
+
+**Example**:
+
+```typescript
+const result = pipe.exec();
+```
+
+## `catch`
+
+### pipe.catch(fn: Function): Pipeable
+
+Adds an error handling function to the pipe.
+
+**Parameters**:
+
+-   `fn`: Error handling function.
+
+**Returns**: The modified `Pipeable` object for chaining.
+
+**Example**:
+
+```typescript
+pipe.catch((error) => console.error(error));
+```
