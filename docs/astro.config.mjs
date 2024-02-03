@@ -1,6 +1,16 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+/* https://vercel.com/docs/projects/environment-variables/system-environment-variables#system-environment-variables */
+const VERCEL_PREVIEW_SITE =
+	process.env.VERCEL_ENV !== 'production' &&
+	process.env.VERCEL_URL &&
+	`https://${process.env.VERCEL_URL}`;
+
+//TODO: Fix this
+const site = VERCEL_PREVIEW_SITE || 'https://slothpipe.techsavvytravvy.com/';
+
+
 // https://astro.build/config
 export default defineConfig({
     integrations: [
@@ -11,6 +21,16 @@ export default defineConfig({
                 "x.com": "https://twitter.com/techsavvytravvy",
             },
             favicon: '/public/favicon.ico',
+            head: [
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image', content: site + 'og.jpg?v=1' },
+				},
+				{
+					tag: 'meta',
+					attrs: { property: 'twitter:image', content: site + 'og.jpg?v=1' },
+				},
+			],
             customCss: [
                 // Relative path to your custom CSS file
                 './src/styles/custom.css',
