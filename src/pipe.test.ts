@@ -74,6 +74,41 @@ describe("Pipe", () => {
                 .tap((x) => x + 3);
             expect(pipe.exec()).toBe(10);
         });
+
+        it("should execute multiple taps consecutively without changing the pipe value", () => {
+            let order: Number[] = [];
+            const pipe = Pipe(5)
+                .tap((x) => { 
+                    order.push(1);
+                    return x + 1;
+                })
+                .tap((x) => { 
+                    order.push(2);
+                    return x - 1;
+                });
+            expect(pipe.exec()).toBe(5);
+            expect(order).toEqual([1, 2]);
+        });
+    
+        it("should allow side effects without changing the pipe value", () => {
+            let sideEffect: Number = 0;
+            const pipe = Pipe(5)
+                .tap((x) => { 
+                    sideEffect = x + 10;
+                });
+            expect(pipe.exec()).toBe(5);
+            expect(sideEffect).toBe(15);
+        });
+    
+        it("should return the correct pipe value after catching an error in tap", () => {
+            const pipe = Pipe(5)
+                .to((x) => x * 2)
+                .tap((x) => { 
+                    if (x === 10) throw new Error("Error");
+                })
+                .catch(() => 1);
+            expect(pipe.exec()).toBe(10);
+        });
     });
 
     describe("exec", () => {
@@ -113,6 +148,15 @@ describe("Pipe", () => {
                 .catch(() => 1);
             expect(bad).toBe(false);
             expect(pipe.exec()).toBe(1);
+        });
+
+        it("should throw an error if catch is not used", () => {
+            const pipe = Pipe(5)
+                .to((x) => x * 2)
+                .tap((x) => {
+                    if (x === 10) throw new Error("simulated error");
+                });
+            expect(() => pipe.exec()).toThrow("simulated error");
         });
     });
 
