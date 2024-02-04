@@ -75,12 +75,12 @@ describe("Pipe", () => {
             expect(pipe.exec()).toBe(10);
         });
 
-        it("should execute multiple taps consecutively without changing the pipe value", () => {
+        it("should create side effects without changing the pipe value", () => {
             let order: Number[] = [];
             const pipe = Pipe(5)
                 .tap((x) => { 
                     order.push(1);
-                    return x + 1;
+                    return x - 1;
                 })
                 .tap((x) => { 
                     order.push(2);
