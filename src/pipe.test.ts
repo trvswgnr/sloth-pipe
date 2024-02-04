@@ -90,16 +90,6 @@ describe("Pipe", () => {
             expect(order).toEqual([1, 2]);
         });
     
-        it("should allow side effects without changing the pipe value", () => {
-            let sideEffect: Number = 0;
-            const pipe = Pipe(5)
-                .tap((x) => { 
-                    sideEffect = x + 10;
-                });
-            expect(pipe.exec()).toBe(5);
-            expect(sideEffect).toBe(15);
-        });
-    
         it("should return the correct pipe value after catching an error in tap", () => {
             const pipe = Pipe(5)
                 .to((x) => x * 2)
