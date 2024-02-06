@@ -1,6 +1,6 @@
-name: 📂 Other
-description: Use this for any other issues. Please do NOT create blank issues
-title: "[Other]: <Write a concise title here>"
+name: 📄 Documentation issue
+description: Found an issue in the documentation? You can use this one!
+title: "[Doc]: <Write a concise title here>"
 body:
     - type: checkboxes
       id: no-duplicate-issues
@@ -26,10 +26,10 @@ body:
       validations:
           required: false
     - type: textarea
-      id: issue-description
+      id: description
       attributes:
-          label: What would you like to share?
-          description: Provide a clear and concise explanation of your issue.
+          label: Description
+          description: Write a detailed description of the changes you are proposing.
       validations:
           required: true
     - type: input
