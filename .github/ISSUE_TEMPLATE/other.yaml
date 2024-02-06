@@ -1,13 +1,13 @@
-name: 🐞 Bug Report
-description: Report a bug/issue to help improve the project.
-title: "[Bug]: <write a concise title about the bug here>"
-labels: ["bug", "triage"]
+name: Other
+description: Use this for any other issues. Please do NOT create blank issues
+title: "[Other]: <Write a concise title here>"
 body:
     - type: checkboxes
       id: no-duplicate-issues
       attributes:
           label: Is there an existing issue for this?
-          description: Please search to see if an issue already exists for the bug you encountered.
+          description:
+              Please search to see if an issue already exists for the issue you encountered.
           options:
               - label:
                     I have searched the existing
@@ -16,7 +16,7 @@ body:
     - type: markdown
       attributes:
           value: |
-              Thanks for taking the time to fill out this bug report!
+              Thanks for taking the time to create this issue!
     - type: input
       id: contact
       attributes:
@@ -26,40 +26,12 @@ body:
       validations:
           required: false
     - type: textarea
-      id: current-behavior
+      id: issue-description
       attributes:
-          label: Current Behavior
-          description: A concise description of what you're experiencing.
+          label: What would you like to share?
+          description: Provide a clear and concise explanation of your issue.
       validations:
           required: true
-    - type: textarea
-      id: expected-behavior
-      attributes:
-          label: Expected Behavior
-          description: A concise description of what you expected to happen.
-      validations:
-          required: false
-    - type: textarea
-      id: steps-to-reproduce
-      attributes:
-          label: Steps To Reproduce
-          description: Steps to reproduce the behavior.
-          placeholder: |
-              1. In this environment...
-              2. With this config...
-              3. Run '...'
-              4. See error...
-      validations:
-          required: false
-    - type: textarea
-      attributes:
-          label: Anything else?
-          description: |
-              Links? References? Anything that will give us more context about the issue you are encountering!
-
-              Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
-      validations:
-          required: false
     - type: input
       id: version
       attributes:
@@ -67,7 +39,7 @@ body:
           description: What version of our package are you running?
           placeholder: ex. 0.0.7
       validations:
-          required: true
+          required: false
     - type: dropdown
       id: browsers
       attributes:
