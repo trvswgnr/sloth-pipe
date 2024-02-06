@@ -1,13 +1,14 @@
-name: 📄 Documentation Issue
-description: Report an issue with the documentation
-title: "[Doc]: <Write a concise title here>"
+name: ✨ Feature Request
+description: Suggest an idea for improvement or a new feature
+title: "[Feature]: <Write a concise title here>"
+labels: ["feature"]
 body:
     - type: checkboxes
       id: no-duplicate-issues
       attributes:
           label: Is there an existing issue for this?
           description:
-              Please search to see whether the issue you are encountering has already been reported.
+              Please check to see whether the issue you want to create has already been reported.
           options:
               - label:
                     I have searched the existing
@@ -16,7 +17,7 @@ body:
     - type: markdown
       attributes:
           value: |
-              Thanks for taking the time to report this issue!
+              Thanks for taking the time to suggest a feature for this project! We are grateful ❤
     - type: input
       id: contact
       attributes:
@@ -26,42 +27,51 @@ body:
       validations:
           required: false
     - type: textarea
-      id: description
+      id: issue-description
       attributes:
-          label: Description
-          description: A clear and concise description of the issue with the documentation.
+          label: Description of your feature request
+          description: A clear and concise description of the feature you are requesting.
       validations:
           required: true
     - type: textarea
-      id: page-section
+      id: motivation
       attributes:
-          label: Page/Section
+          label: Motivation
           description:
-              Specify the page or section of the documentation where you encountered the problem.
+              Explain why this feature would be beneficial and how it addresses a specific need or
+              problem.
       validations:
-          required: false
+          required: true
     - type: textarea
-      id: current-doc
-      attributes:
-          label: Current Documentation
-          description:
-              Provide the current content of the documentation related to the issue, if applicable.
-      validations:
-          required: false
-    - type: textarea
-      id: proposed-improvement
-      attributes:
-          label: Proposed Improvement
-          description: Suggest a clear and concise improvement to the documentation.
-      validations:
-          required: false
-    - type: textarea
-      id: additional-context
+      id: context
       attributes:
           label: Additional Context
+          description: Add any additional context or screenshots about the feature request here.
+      validations:
+          required: false
+    - type: textarea
+      id: implementation
+      attributes:
+          label: Possible Implementation
           description:
-              Add any additional context or information that might help in addressing the
-              documentation issue.
+              If you have any thoughts on how this feature could be implemented or suggestions on
+              its design, feel free to share.
+      validations:
+          required: false
+    - type: textarea
+      id: related-problem
+      attributes:
+          label: Is your feature request related to a problem? Please describe
+          description: A clear and concise description of what the problem is.
+          placeholder: Ex. I'm always frustrated when [...]
+      validations:
+          required: false
+    - type: textarea
+      id: additional-info
+      attributes:
+          label: Additional Information
+          description:
+              Add any other information or context that might be relevant to the feature request.
       validations:
           required: false
     - type: input
@@ -96,7 +106,7 @@ body:
               - Other
           default: 0
       validations:
-          required: true
+          required: false
     - type: checkboxes
       id: willing-to-work
       attributes:
