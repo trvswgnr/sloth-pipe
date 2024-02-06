@@ -166,7 +166,7 @@ function checkIsSlower(report: Report, marginOfError = 0.2) {
 }
 
 async function getOldPipe(filepath: string) {
-    const child = Bun.spawn(["git", "show", "main:pipe.ts"], { stdout: "pipe" });
+    const child = Bun.spawn(["git", "show", "origin/main:src/pipe.ts"], { stdout: "pipe" });
     const code = await child.exited;
     if (code !== 0) throw new Error("could not get old pipe");
     const content: string = await Bun.readableStreamToText(child.stdout);
