@@ -3,12 +3,6 @@ contact_links:
     - name: Become a SPONSOR ❤
       url: https://github.com/sponsors/trvswgnr
       about: Help this project by becoming a sponsor
-    - name: Read our CODE OF CONDUCT doc
-      url: https://github.com/trvswgnr/sloth-pipe?tab=readme-ov-file
-      about: This link will take you to our CODE OF CONDUCT doc
     - name: Read our CONTRIBUTION GUIDE
       url: https://github.com/trvswgnr/sloth-pipe?tab=readme-ov-file#contributing
       about: This link will take you to our CONTRIBUTION GUIDE doc
-    - name: New? Know how to contribute to open source
-      url: https://opensource.guide/
-      about: Get some more ideas on open source
