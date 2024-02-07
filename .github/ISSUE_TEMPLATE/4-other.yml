@@ -1,0 +1,113 @@
+name: 📂 Other
+description:
+    Report an issue or request that doesn't fall into other categories. Please do NOT create blank
+    issue
+title: "[Other]: <Write a concise title here>"
+body:
+    - type: checkboxes
+      id: no-duplicate-issues
+      attributes:
+          label: Is there an existing issue for this?
+          description:
+              Please check to see whether the issue you are encountering has already been reported.
+          options:
+              - label:
+                    I have searched the existing
+                    [issues](https://github.com/trvswgnr/sloth-pipe/issues)
+                required: true
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for taking the time to create this issue!
+    - type: textarea
+      id: issue-description
+      attributes:
+          label: Description
+          description: A clear and concise description of the issue or request.
+      validations:
+          required: true
+    - type: textarea
+      id: issue-context
+      attributes:
+          label: Context
+          description: Provide any relevant context or details about the issue.
+      validations:
+          required: false
+    - type: textarea
+      id: issue-reproduce
+      attributes:
+          label: Steps to Reproduce (if applicable)
+          description: Steps to reproduce the behavior.
+          placeholder: |
+              1. Step 1
+              2. Step 2
+              3. ...
+      validations:
+          required: false
+    - type: textarea
+      id: current
+      attributes:
+          label: Current Behavior
+          description: Describe the current behavior.
+      validations:
+          required: false
+    - type: textarea
+      id: expected
+      attributes:
+          label: Expected Behavior
+          description: Describe what you expected to happen.
+      validations:
+          required: false
+    - type: textarea
+      id: ss
+      attributes:
+          label: Screenshots (if applicable)
+          description: Include screenshots or images if they help in understanding the issue.
+      validations:
+          required: false
+    - type: textarea
+      id: additional
+      attributes:
+          label: Additional Information
+          description: Add any other information that might be relevant to the issue.
+      validations:
+          required: false
+    - type: input
+      id: version
+      attributes:
+          label: Version
+          description: What version of our package are you running?
+          placeholder: ex. 0.0.7
+      validations:
+          required: false
+    - type: input
+      id: os
+      attributes:
+          label: Operating System
+          description: What OS are you using?
+          placeholder: ex. Windows 10, Mac 14, Ubuntu 23 [...]
+      validations:
+          required: false
+    - type: dropdown
+      id: browsers
+      attributes:
+          label: "What browsers are you seeing the problem on?"
+          multiple: true
+          options:
+              - Chrome
+              - Firefox
+              - Safari
+              - Microsoft Edge
+              - Brave
+              - Opera
+              - Other
+          default: 0
+      validations:
+          required: false
+    - type: checkboxes
+      id: willing-to-work
+      attributes:
+          label: "Are you willing to work on this issue?"
+          options:
+              - label: "Yes I am. (leave this unchecked for No)"
+                required: false

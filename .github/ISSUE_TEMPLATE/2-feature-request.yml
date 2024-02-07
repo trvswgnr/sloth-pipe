@@ -1,0 +1,83 @@
+name: ✨ Feature Request
+description: Suggest an idea for improvement or a new feature
+title: "[Feature]: <Write a concise title here>"
+labels: ["feature"]
+body:
+    - type: checkboxes
+      id: no-duplicate-issues
+      attributes:
+          label: Is there an existing issue for this?
+          description:
+              Please check to see whether the issue you want to create has already been reported.
+          options:
+              - label:
+                    I have searched the existing
+                    [issues](https://github.com/trvswgnr/sloth-pipe/issues)
+                required: true
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for taking the time to suggest a feature for this project! We are grateful ❤
+    - type: textarea
+      id: issue-description
+      attributes:
+          label: Description of your feature request
+          description: A clear and concise description of the feature you are requesting.
+      validations:
+          required: true
+    - type: textarea
+      id: motivation
+      attributes:
+          label: Motivation
+          description:
+              Explain why this feature would be beneficial and how it addresses a specific need or
+              problem.
+      validations:
+          required: true
+    - type: textarea
+      id: context
+      attributes:
+          label: Additional Context
+          description: Add any additional context or screenshots about the feature request here.
+      validations:
+          required: false
+    - type: input
+      id: version
+      attributes:
+          label: Version
+          description: What version of our package are you running?
+          placeholder: ex. 0.0.7
+      validations:
+          required: true
+    - type: input
+      id: os
+      attributes:
+          label: Operating System
+          description: What OS are you using?
+          placeholder: ex. Windows 10, Mac 14, Ubuntu 23 [...]
+      validations:
+          required: false
+    - type: dropdown
+      id: browsers
+      attributes:
+          label: Browsers
+          description: "What browsers are you seeing the problem on?"
+          multiple: true
+          options:
+              - Chrome
+              - Firefox
+              - Safari
+              - Microsoft Edge
+              - Brave
+              - Opera
+              - Other
+          default: 0
+      validations:
+          required: false
+    - type: checkboxes
+      id: willing-to-work
+      attributes:
+          label: "Are you willing to work on this issue?"
+          options:
+              - label: "Yes I am. (leave this unchecked for No)"
+                required: false

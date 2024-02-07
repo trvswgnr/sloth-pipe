@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+    - name: Become a SPONSOR ❤
+      url: https://github.com/sponsors/trvswgnr
+      about: Help this project by becoming a sponsor
+    - name: Read our CONTRIBUTION GUIDE
+      url: https://github.com/trvswgnr/sloth-pipe?tab=readme-ov-file#contributing
+      about: This link will take you to our CONTRIBUTION GUIDE doc
