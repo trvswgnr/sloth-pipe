@@ -110,7 +110,7 @@ console.log(safeResult); // Outputs: 0
 ## API Reference
 
 The API consists of a few key methods: `to`, `tap`, `exec`, and `catch`. For a detailed reference,
-please refer to the [API documentation](api-docs.md).
+please refer to the [API documentation](https://sloth-pipe.vercel.app/).
 
 ## Contributing
 
