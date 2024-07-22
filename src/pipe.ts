@@ -162,7 +162,7 @@ type PipedFnTap<T> = {
     <U>(fn: () => U): Pipe<T, U, "tap">;
 };
 
-interface Pipeable<T> {
+export interface Pipeable<T> {
     /**
      * the result of the pipe after it's been executed.
      * if the pipe has not been executed, it wil execute it and return the result
